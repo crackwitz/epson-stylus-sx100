@@ -84,48 +84,49 @@ Was ich mache (funktioniert, kann man bestimmt noch reduzieren):
     * warte, 0-20 Millisekunden haben geklappt
 
 ## Arduino
+~~~~
+#define START 2
+#define CLOCK 3
+#define DPIMODE 4
 
- #define START 2
- #define CLOCK 3
- #define DPIMODE 4
- 
- bool dpimode = 1;
- uint16_t pixels = dpimode ? 5184 : 2592;
- 
- uint32_t linetime = 20000; // us
- uint32_t sched = 0;
- 
- void setup() {
-   pinMode(START, OUTPUT);
-   pinMode(CLOCK, OUTPUT);
-   pinMode(DPIMODE, OUTPUT);
- 
-   digitalWrite(DPIMODE, dpimode);
- 
-   sched = micros();
- }
- 
- void loop() {
-   digitalWrite(START, HIGH);
-   digitalWrite(CLOCK, HIGH);
-   digitalWrite(CLOCK, LOW);
-   digitalWrite(START, LOW);
- 
-   for (uint16_t counter = 0; counter < 82 + pixels; counter += 1)
-   {
-     PORTD |= _BV(PORTD3);
-     //delayMicroseconds(1);
-     PORTD &= ~_BV(PORTD3);
-     //delayMicroseconds(1);
-   }
- 
-   sched += linetime;
-   int32_t dt = sched - micros();
-   while (dt > 0x4000)
-   {
-     delayMicroseconds(0x4000);
-     dt -= 0x4000;
-   }
-   if (dt > 0)
-     delayMicroseconds(dt);
- }
+bool dpimode = 1;
+uint16_t pixels = dpimode ? 5184 : 2592;
+
+uint32_t linetime = 20000; // us
+uint32_t sched = 0;
+
+void setup() {
+  pinMode(START, OUTPUT);
+  pinMode(CLOCK, OUTPUT);
+  pinMode(DPIMODE, OUTPUT);
+
+  digitalWrite(DPIMODE, dpimode);
+
+  sched = micros();
+}
+
+void loop() {
+  digitalWrite(START, HIGH);
+  digitalWrite(CLOCK, HIGH);
+  digitalWrite(CLOCK, LOW);
+  digitalWrite(START, LOW);
+
+  for (uint16_t counter = 0; counter < 82 + pixels; counter += 1)
+  {
+    PORTD |= _BV(PORTD3);
+    //delayMicroseconds(1);
+    PORTD &= ~_BV(PORTD3);
+    //delayMicroseconds(1);
+  }
+
+  sched += linetime;
+  int32_t dt = sched - micros();
+  while (dt > 0x4000)
+  {
+    delayMicroseconds(0x4000);
+    dt -= 0x4000;
+  }
+  if (dt > 0)
+    delayMicroseconds(dt);
+}
+~~~~
